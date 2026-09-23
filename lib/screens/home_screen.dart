@@ -123,20 +123,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.primarySaffron, width: 1.5),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primarySaffron.withValues(alpha: 0.3),
+                    color: AppColors.primarySaffron.withValues(alpha: 0.35),
                     blurRadius: 6,
                   ),
                 ],
               ),
-              child: ClipOval(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.5),
                 child: Image.asset(
                   'assets/images/om_logo.jpg',
-                  width: 32,
-                  height: 32,
+                  width: 34,
+                  height: 34,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1034,24 +1035,25 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  width: 76,
-                  height: 76,
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(22),
                     border: Border.all(color: Colors.amber[300]!, width: 2.5),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.25),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                  child: ClipOval(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(19),
                     child: Image.asset(
                       'assets/images/om_logo.jpg',
-                      width: 76,
-                      height: 76,
+                      width: 80,
+                      height: 80,
                       fit: BoxFit.cover,
                     ),
                   ),

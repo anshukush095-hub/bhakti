@@ -14,23 +14,23 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            // Om Mandala Logo - Prominent & Beautifully Filling the Space
+            // Om Mandala Logo - Prominent & Beautifully Filling the Space (Full Bleed)
             Center(
               child: Container(
-                width: 220,
-                height: 220,
+                width: 236,
+                height: 236,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(38),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primarySaffron.withValues(alpha: 0.35),
-                      blurRadius: 28,
-                      spreadRadius: 6,
+                      color: AppColors.primarySaffron.withValues(alpha: 0.40),
+                      blurRadius: 32,
+                      spreadRadius: 8,
                     ),
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.15),
-                      blurRadius: 14,
-                      offset: const Offset(0, 6),
+                      color: Colors.black.withValues(alpha: 0.20),
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                   border: Border.all(
@@ -38,11 +38,12 @@ class SplashScreen extends StatelessWidget {
                     width: 3.5,
                   ),
                 ),
-                child: ClipOval(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(34),
                   child: Image.asset(
                     'assets/images/om_logo.jpg',
-                    width: 220,
-                    height: 220,
+                    width: 236,
+                    height: 236,
                     fit: BoxFit.cover,
                   ),
                 ),
