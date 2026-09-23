@@ -25,14 +25,9 @@ class SoundService {
       } catch (_) {}
     }
     try {
-      final b2 = await rootBundle.load('assets/audio/temple_bell.mp3');
+      final b2 = await rootBundle.load('assets/audio/temple_bell.wav');
       _bellBytes = b2.buffer.asUint8List(b2.offsetInBytes, b2.lengthInBytes);
-    } catch (_) {
-      try {
-        final b2 = await rootBundle.load('assets/audio/temple_bell.wav');
-        _bellBytes = b2.buffer.asUint8List(b2.offsetInBytes, b2.lengthInBytes);
-      } catch (_) {}
-    }
+    } catch (_) {}
     try {
       final b3 = await rootBundle.load('assets/audio/japa_bead.wav');
       _japaBytes = b3.buffer.asUint8List(b3.offsetInBytes, b3.lengthInBytes);
@@ -52,11 +47,11 @@ class SoundService {
         await _bellPlayer.play(BytesSource(_bellBytes!));
       } else {
         try {
-          final data = await rootBundle.load('assets/audio/temple_bell.mp3');
+          final data = await rootBundle.load('assets/audio/temple_bell.wav');
           _bellBytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
           await _bellPlayer.play(BytesSource(_bellBytes!));
         } catch (_) {
-          await _bellPlayer.play(AssetSource('audio/temple_bell.mp3'));
+          await _bellPlayer.play(AssetSource('audio/temple_bell.wav'));
         }
       }
     } catch (e) {

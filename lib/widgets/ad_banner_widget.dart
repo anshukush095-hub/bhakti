@@ -81,7 +81,6 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
         color: Theme.of(context).brightness == Brightness.dark
             ? AppColors.bgDark
             : const Color(0xFFFAF6F0),
-        padding: const EdgeInsets.symmetric(vertical: 4),
         child: SizedBox(
           width: _bannerAd!.size.width.toDouble(),
           height: _bannerAd!.size.height.toDouble(),

@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../providers/app_state.dart';
 import '../services/sound_service.dart';
 import '../theme/app_theme.dart';
+import '../data/panchang_2026_data.dart';
 import 'puja_checklist_screen.dart';
 import 'festival_list_screen.dart';
 import 'japa_mala_screen.dart';
@@ -122,9 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.primarySaffron, width: 1.5),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.primarySaffron.withValues(alpha: 0.35),
@@ -133,11 +135,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.5),
+                borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
                   'assets/images/om_logo.jpg',
-                  width: 34,
-                  height: 34,
+                  width: 36,
+                  height: 36,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -184,8 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Featured Hero Card (Mahashivratri)
-            _buildFeaturedCard(context, isDark),
+            // 1. "आज का दिन" Divine Hero Card (Replacing Vishesh Parv with Aaj Ka Din)
+            _buildAajKaDinCard(context, appState, isDark),
             const SizedBox(height: 16),
 
             // 2. Daily Shloka / Mantra Card
@@ -502,7 +504,57 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFeaturedCard(BuildContext context, bool isDark) {
+  Widget _buildAajKaDinCard(BuildContext context, AppState appState, bool isDark) {
+    final now = DateTime.now();
+    final todayData = Panchang2026Data.getPanchangForDate(now);
+
+    String deityTitle;
+    String deitySubtitle;
+    String deityImage;
+
+    switch (now.weekday) {
+      case DateTime.monday:
+        deityTitle = 'सोमवार • भगवान शिव पूजन';
+        deitySubtitle = 'ॐ नमः शिवाय • महादेव की कृपा एवं आत्मशांति';
+        deityImage = 'assets/images/shiva_avatar.jpg';
+        break;
+      case DateTime.tuesday:
+        deityTitle = 'मंगलवार • श्री हनुमान पूजन';
+        deitySubtitle = 'संकट मोचन महाबली हनुमान जी का पावन दिन';
+        deityImage = 'assets/images/om_logo.jpg';
+        break;
+      case DateTime.wednesday:
+        deityTitle = 'बुधवार • श्री गणेश पूजन';
+        deitySubtitle = 'विघ्नहर्ता गणपति बाप्पा का मंगलमय दिन';
+        deityImage = 'assets/images/festival_ganesha.jpg';
+        break;
+      case DateTime.thursday:
+        deityTitle = 'गुरुवार • श्री हरि विष्णु पूजन';
+        deitySubtitle = 'ॐ नमो भगवते वासुदेवाय • सुख-समृद्धि एवं ज्ञान';
+        deityImage = 'assets/images/festival_satyanarayan.jpg';
+        break;
+      case DateTime.friday:
+        deityTitle = 'शुक्रवार • माँ महालक्ष्मी पूजन';
+        deitySubtitle = 'धन-धान्य, ऐश्वर्य एवं सौभाग्य दायिनी माँ';
+        deityImage = 'assets/images/festival_deepawali.jpg';
+        break;
+      case DateTime.saturday:
+        deityTitle = 'शनिवार • श्री शनि देव एवं हनुमान पूजन';
+        deitySubtitle = 'न्यायप्रिय शनि देव एवं मारुति नंदन आराधना';
+        deityImage = 'assets/images/om_logo.jpg';
+        break;
+      case DateTime.sunday:
+      default:
+        deityTitle = 'रविवार • भगवान सूर्य देव पूजन';
+        deitySubtitle = 'ॐ सूर्याय नमः • तेज, आरोग्य एवं आत्मबल';
+        deityImage = 'assets/images/om_logo.jpg';
+        break;
+    }
+
+    if (todayData.festivalBadge != null && todayData.festivalBadge!.isNotEmpty) {
+      deityTitle = '${todayData.dayName} • ${todayData.festivalBadge!}';
+    }
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -510,141 +562,310 @@ class _HomeScreenState extends State<HomeScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: isDark
-              ? [const Color(0xFF422F22), const Color(0xFF2A1B14)]
-              : [const Color(0xFFFEF3E4), const Color(0xFFF9D8B4)],
+              ? [const Color(0xFF382318), const Color(0xFF221610)]
+              : [const Color(0xFFFFF7ED), const Color(0xFFFDECD8)],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? const Color(0xFF5A3E2D) : const Color(0xFFEFCFAE),
+          color: isDark ? const Color(0xFF5A3E2D) : const Color(0xFFF0D4B8),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
-            blurRadius: 12,
+            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
+            blurRadius: 14,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Shiva Avatar / Large Hero Image
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
+            // Header Row: "आज का दिन" Badge + Tithi/Date
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.primarySaffron.withValues(alpha: isDark ? 0.25 : 0.18),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: AppColors.primarySaffron.withValues(alpha: 0.4),
+                      width: 1,
+                    ),
                   ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  'assets/images/shiva_hero.jpg',
-                  width: 112,
-                  height: 112,
-                  fit: BoxFit.cover,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('🕉️', style: TextStyle(fontSize: 12)),
+                      const SizedBox(width: 5),
+                      Text(
+                        'आज का दिन • ${todayData.dayName}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? const Color(0xFFFFCC80) : const Color(0xFFB25E00),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  todayData.dateHindi,
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white70 : AppColors.textMedium,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Middle Section: Deity Avatar + Deity Title & Daily Panchang highlights
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppColors.primarySaffron.withValues(alpha: 0.3),
+                      width: 1.2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.12),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      deityImage,
+                      width: 82,
+                      height: 82,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        deityTitle,
+                        style: const TextStyle(
+                          fontSize: 16.5,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        deitySubtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: isDark ? Colors.white70 : AppColors.textMedium,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? const Color(0xFF1E2F2D)
+                              : AppColors.lightTeal.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '${todayData.paksha} • ${todayData.tithi}',
+                          style: const TextStyle(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryTeal,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Mini stats bar: Sunrise, Sunset, Abhijit, RahuKaal (Robust 2x2 layout, zero overflow)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.25)
+                    : Colors.white.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isDark ? AppColors.borderDark : const Color(0xFFEFE4D4),
+                  width: 1,
                 ),
               ),
-            ),
-            const SizedBox(width: 14),
-            // Text & Button
-            Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: AppColors.primarySaffron.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      'विशेष पर्व • आज',
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? const Color(0xFFFFCC80) : const Color(0xFFB25E00),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'महाशिवरात्रि',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'भगवान शिव का पावन अभिषेक एवं पूजन',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      color: isDark ? Colors.white70 : AppColors.textMedium,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      final appState = Provider.of<AppState>(context, listen: false);
-                      appState.selectFestival(appState.festivals[0]);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const PujaChecklistScreen(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildAajMiniStat(
+                          icon: Icons.wb_sunny_rounded,
+                          label: 'सूर्योदय',
+                          val: todayData.sunrise,
+                          color: Colors.amber.shade800,
+                          isDark: isDark,
                         ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryMaroon,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primaryMaroon.withValues(alpha: 0.35),
-                            blurRadius: 6,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
                       ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'पूजा विधि देखें',
-                            style: TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Icon(
-                            Icons.arrow_forward,
-                            size: 13,
-                            color: Colors.white,
-                          ),
-                        ],
+                      Container(
+                        width: 1,
+                        height: 24,
+                        color: isDark ? AppColors.borderDark : const Color(0xFFEFE4D4),
                       ),
-                    ),
+                      Expanded(
+                        child: _buildAajMiniStat(
+                          icon: Icons.wb_twilight_rounded,
+                          label: 'सूर्यास्त',
+                          val: todayData.sunset,
+                          color: Colors.orange.shade700,
+                          isDark: isDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    height: 12,
+                    thickness: 0.8,
+                    color: isDark ? AppColors.borderDark : const Color(0xFFEFE4D4),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildAajMiniStat(
+                          icon: Icons.check_circle_outline_rounded,
+                          label: 'शुभ मुहूर्त',
+                          val: todayData.abhijit.split(' - ').first,
+                          color: Colors.green.shade700,
+                          isDark: isDark,
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 24,
+                        color: isDark ? AppColors.borderDark : const Color(0xFFEFE4D4),
+                      ),
+                      Expanded(
+                        child: _buildAajMiniStat(
+                          icon: Icons.remove_circle_outline_rounded,
+                          label: 'राहुकाल',
+                          val: todayData.rahuKaal.split(' - ').first,
+                          color: Colors.red.shade700,
+                          isDark: isDark,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // Footer Button: View full panchang
+            InkWell(
+              onTap: () {
+                appState.setNavIndex(2); // Jump to Panchang Tab
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryMaroon,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryMaroon.withValues(alpha: 0.3),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.calendar_month_rounded, size: 16, color: Colors.white),
+                    SizedBox(width: 6),
+                    Text(
+                      'आज का संपूर्ण पंचांग एवं चौघड़िया देखें',
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 4),
+                    Icon(Icons.arrow_forward_rounded, size: 14, color: Colors.white),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAajMiniStat({
+    required IconData icon,
+    required String label,
+    required String val,
+    required Color color,
+    required bool isDark,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 15, color: color),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white70 : AppColors.textMuted,
+                ),
+              ),
+              Text(
+                val,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? Colors.white : AppColors.textDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -933,6 +1154,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPanchangSummaryCard(BuildContext context, AppState appState, bool isDark) {
+    final todayData = Panchang2026Data.getPanchangForDate(DateTime.now());
     return InkWell(
       onTap: () {
         appState.setNavIndex(2); // Switch to Panchang screen
@@ -973,21 +1195,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'आज का पंचांग एवं शुभ मुहूर्त',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
-                        'रविवार • फाल्गुन कृष्ण त्रयोदशी / महाशिवरात्रि',
-                        style: TextStyle(
+                        '${todayData.dayName} • ${todayData.paksha} ${todayData.tithi} (${todayData.nakshatra} नक्षत्र)',
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.primaryTeal,
                           fontWeight: FontWeight.w600,
@@ -1006,13 +1228,36 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 12),
             const Divider(height: 1, color: Color(0xFFEFE8DC)),
             const SizedBox(height: 10),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Row(
               children: [
-                _PanchangMiniStat(title: 'सूर्योदय', value: '07:01 AM', icon: Icons.wb_sunny_outlined),
-                _PanchangMiniStat(title: 'सूर्यास्त', value: '06:11 PM', icon: Icons.wb_twilight_outlined),
-                _PanchangMiniStat(title: 'अभिजीत', value: '12:13 PM', icon: Icons.access_time_rounded),
-                _PanchangMiniStat(title: 'राहुकाल', value: '04:47 PM', icon: Icons.block_flipped),
+                Expanded(
+                  child: _PanchangMiniStat(
+                    title: 'सूर्योदय',
+                    value: todayData.sunrise,
+                    icon: Icons.wb_sunny_outlined,
+                  ),
+                ),
+                Expanded(
+                  child: _PanchangMiniStat(
+                    title: 'सूर्यास्त',
+                    value: todayData.sunset,
+                    icon: Icons.wb_twilight_outlined,
+                  ),
+                ),
+                Expanded(
+                  child: _PanchangMiniStat(
+                    title: 'अभिजीत',
+                    value: todayData.abhijit.split(' - ').first,
+                    icon: Icons.access_time_rounded,
+                  ),
+                ),
+                Expanded(
+                  child: _PanchangMiniStat(
+                    title: 'राहुकाल',
+                    value: todayData.rahuKaal.split(' - ').first,
+                    icon: Icons.block_flipped,
+                  ),
+                ),
               ],
             ),
           ],
@@ -1022,56 +1267,89 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildAppDrawer(BuildContext context, AppState appState) {
+    final topPadding = MediaQuery.of(context).padding.top;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          // Edge-to-Edge Full View Icon Header (Zero overflow)
+          Container(
+            width: double.infinity,
             decoration: const BoxDecoration(
-              color: AppColors.primaryMaroon,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF2A0802),
+                  AppColors.primaryMaroon,
+                ],
+              ),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
               children: [
+                SizedBox(height: topPadding),
+                // Full View Edge-to-Edge App Icon
                 Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: Colors.amber[300]!, width: 2.5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.25),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(19),
+                  width: double.infinity,
+                  color: Colors.black26,
+                  child: AspectRatio(
+                    aspectRatio: 16 / 10,
                     child: Image.asset(
                       'assets/images/om_logo.jpg',
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain, // Full view icon, nothing cropped or hidden!
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  'पूजा विधि (Puja Vidhi)',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 21,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const Text(
-                  'संपूर्ण सनातन पूजा, पंचांग, चालीसा एवं जप माला',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
+                // Title and Subtitle Section
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              'पूजा विधि (Puja Vidhi)',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 19,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.primarySaffron.withValues(alpha: 0.25),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppColors.primarySaffron, width: 1),
+                            ),
+                            child: const Text(
+                              '॥ ॐ ॥',
+                              style: TextStyle(
+                                color: AppColors.primarySaffron,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'संपूर्ण सनातन पूजा, पंचांग, चालीसा एवं जप माला',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
